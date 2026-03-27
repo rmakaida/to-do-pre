@@ -30,15 +30,28 @@ function createItem(item) {
   	const editButton = clone.querySelector(".to-do__item-button_type_edit");
 
 	textElement.textContent = item;
+
 	deleteButton.addEventListener('click', (evt) => {
 		clone.remove();
 		const items = getTasksFromDOM();
 		saveTasks(items);
 	});
+
 	duplicateButton.addEventListener('click', (evt) => {
 		const itemName = textElement.textContent;
 		const newItem = createItem(itemName);
 		listElement.prepend(newItem);
+		const items = getTasksFromDOM();
+		saveTasks(items);
+	});
+
+	editButton.addEventListener('click', (evt) => {
+		textElement.setAttribute('contenteditable', 'true');
+		textElement.focus();
+	});
+
+	textElement.addEventListener('blur', (evt) => {
+		textElement.setAttribute('contenteditable', 'false');
 		const items = getTasksFromDOM();
 		saveTasks(items);
 	});
