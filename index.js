@@ -12,7 +12,13 @@ const formElement = document.querySelector(".to-do__form");
 const inputElement = document.querySelector(".to-do__input");
 
 function loadTasks() {
-	return items;
+	const tasks = localStorage.getItem('tasks');
+	if(tasks != null) {
+		return JSON.parse(tasks);
+	}
+	else {
+		return items;
+	}
 }
 
 function createItem(item) {
@@ -28,14 +34,28 @@ function createItem(item) {
 }
 
 function getTasksFromDOM() {
-
+	const itemsNamesElements = document.querySelectorAll('.to-do__item-text');
+	let tasks = [];
+	itemsNamesElements.forEach(item => {
+		tasks.push(item.textContent);
+	});
+	return tasks;
 }
 
 function saveTasks(tasks) {
-
+	localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 items = loadTasks();
 items.forEach(item => {
 	listElement.append(createItem(item));
+});
+
+formElement.addEventListener('submit', (evt) => {
+	evt.preventDefault();
+	const item = inputElement.value;
+	listElement.prepend(createItem(item));
+	items = getTasksFromDOM();
+	saveTasks(items);
+	inputElement.value = '';
 });
